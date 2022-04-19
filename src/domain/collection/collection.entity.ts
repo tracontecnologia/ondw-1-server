@@ -7,6 +7,9 @@ export class Collection extends CustomBaseEntity {
   @Column({ nullable: false, type: 'varchar' })
   name: string;
 
-  @ManyToOne(() => User, (user: User) => user.collections, { nullable: false })
-  owner: User;
+  @ManyToOne(() => User, (user: User) => user.collections, {
+    nullable: false,
+    eager: true,
+  })
+  author: User;
 }

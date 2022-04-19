@@ -16,7 +16,7 @@ export class User extends CustomBaseEntity {
   @Column({ nullable: false, type: 'varchar' })
   salt: string;
 
-  @OneToMany(() => Collection, (collection: Collection) => collection.owner, {
+  @OneToMany(() => Collection, (collection: Collection) => collection.author, {
     nullable: true,
   })
   collections: Collection[];
