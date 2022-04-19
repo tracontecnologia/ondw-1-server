@@ -1,5 +1,5 @@
 import { CustomBaseEntity } from 'src/shared/customBase.entity';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity('users')
 export class User extends CustomBaseEntity {
