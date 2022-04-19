@@ -3,10 +3,10 @@ import { Column, Entity } from 'typeorm';
 
 @Entity('users')
 export class User extends CustomBaseEntity {
-  @Column({ nullable: false, type: 'varchar', length: 150 })
+  @Column({ nullable: false, type: 'varchar' })
   name: string;
 
-  @Column({ nullable: false, type: 'varchar', length: 180 })
+  @Column({ nullable: false, type: 'varchar' })
   email: string;
 
   @Column({ nullable: false, type: 'varchar' })
