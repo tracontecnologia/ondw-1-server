@@ -1,4 +1,4 @@
-import { CustomBaseEntity } from 'src/shared/customBase.entity';
+import { CustomBaseEntity } from 'src/shared/custom-base.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity('users')
