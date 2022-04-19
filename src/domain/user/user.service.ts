@@ -20,6 +20,10 @@ export class UserService {
     return user.save();
   }
 
+  public async findById(id: string): Promise<User | null> {
+    return this.repository.findOne({ id });
+  }
+
   public async findUserByNameOrEmail(
     name: string,
     email: string,
