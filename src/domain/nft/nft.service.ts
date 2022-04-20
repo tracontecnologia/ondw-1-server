@@ -53,7 +53,7 @@ export class NFTService {
 
   private makeHash(): string {
     const string = '' + this.index;
-    var pad = '0000';
+    const pad = '0000';
 
     return pad.substring(0, pad.length - string.length) + string;
   }

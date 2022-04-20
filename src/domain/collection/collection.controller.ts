@@ -4,7 +4,6 @@ import {
   Delete,
   Param,
   Post,
-  Put,
   UploadedFile,
   UseGuards,
   UseInterceptors,
