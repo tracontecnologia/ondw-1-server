@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Post,
   Put,
@@ -41,5 +42,10 @@ export class CollectionController {
     @Body() createNFTDto: CreateNFTDto,
   ): Promise<NFT | null> {
     return this.service.createNFT(id, createNFTDto, photo.path);
+  }
+
+  @Delete('/:id')
+  public async delete(@Param('id') id: string): Promise<void> {
+    return this.service.delete(id);
   }
 }

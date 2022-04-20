@@ -52,17 +52,16 @@ export class CollectionService {
     return nft;
   }
 
-  private async findById(id: string): Promise<Collection | null> {
-    const collection = await this.repository.findOne({ id });
+  public async delete(id: string): Promise<void> {
+    const collection = await this.findById(id);
+    if (!collection)
+      throw new BadRequestException("There's no Collection with given ID");
 
-    return collection;
+    await collection.remove();
   }
 
-  private async findByAuthorAndName(
-    author: User,
-    name: string,
-  ): Promise<Collection | null> {
-    const collection = await this.repository.findOne({ name, author });
+  private async findById(id: string): Promise<Collection | null> {
+    const collection = await this.repository.findOne({ id });
 
     return collection;
   }

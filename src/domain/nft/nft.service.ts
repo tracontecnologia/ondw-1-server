@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Collection } from '../collection/collection.entity';
@@ -35,6 +35,20 @@ export class NFTService {
     });
 
     return nft.save();
+  }
+
+  public async delete(id: string): Promise<void> {
+    const nft = await this.findById(id);
+    if (!nft)
+      throw new BadRequestException("There's no Collection with given ID");
+
+    await nft.remove();
+  }
+
+  private async findById(id: string): Promise<NFT | null> {
+    const nft = await this.repository.findOne({ id });
+
+    return nft;
   }
 
   private makeHash(): string {

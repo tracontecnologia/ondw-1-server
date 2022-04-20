@@ -19,6 +19,7 @@ export class NFT extends CustomBaseEntity {
   @ManyToOne(() => Collection, (collection: Collection) => collection.nfts, {
     nullable: false,
     eager: true,
+    onDelete: 'CASCADE',
   })
   parentCollection: Collection;
 }
