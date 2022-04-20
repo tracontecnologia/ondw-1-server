@@ -1,5 +1,6 @@
 import { CustomBaseEntity } from 'src/shared/custom-base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { NFT } from '../nft/nft.entity';
 import { User } from '../user/user.entity';
 
 @Entity('collections')
@@ -12,4 +13,9 @@ export class Collection extends CustomBaseEntity {
     eager: true,
   })
   author: User;
+
+  @OneToMany(() => NFT, (nft: NFT) => nft.parentCollection, {
+    nullable: true,
+  })
+  nfts: NFT[];
 }
