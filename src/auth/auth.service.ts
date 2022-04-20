@@ -60,7 +60,10 @@ export class AuthService {
   ): Promise<User> {
     const { email, password } = credentialsDto;
 
-    const user = await this.userService.findUserByNameOrEmail(null, email);
+    const user = await this.userService.findUserByNameOrEmailForLogin(
+      null,
+      email,
+    );
 
     if (
       !user ||
