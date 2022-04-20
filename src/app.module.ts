@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { typeOrmConfig } from './config/typeOrm.config';
 import { CollectionModule } from './domain/collection/collection.module';
+import { NFTModule } from './domain/nft/nft.module';
 import { UserModule } from './domain/user/user.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { UserModule } from './domain/user/user.module';
     AuthModule,
     UserModule,
     CollectionModule,
+    NFTModule,
   ],
   controllers: [],
   providers: [],
