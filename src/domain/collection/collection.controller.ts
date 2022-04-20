@@ -1,6 +1,19 @@
-import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { GetLoggedUser } from 'src/auth/decorators/get-logged-user.decorator';
+import assetsConfig from 'src/config/assets.config';
+import { CreateNFTDto } from '../nft/dto/nft.create.dto';
+import { NFT } from '../nft/nft.entity';
 import { User } from '../user/user.entity';
 
 import { Collection } from './collection.entity';
@@ -19,6 +32,16 @@ export class CollectionController {
     @GetLoggedUser() user: User,
   ): Promise<Collection | null> {
     return this.service.create(createDto, user);
+  }
+
+  @Post('/:id/nfts')
+  @UseInterceptors(FileInterceptor('photo', assetsConfig('photos')))
+  public async createNFT(
+    @Param('id') id: string,
+    @UploadedFile() photo: Express.Multer.File,
+    @Body() createNFTDto: CreateNFTDto,
+  ): Promise<NFT | null> {
+    return this.service.createNFT(id, createNFTDto, photo.path);
   }
 
   @Put('/:id')
