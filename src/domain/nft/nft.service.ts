@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Collection } from '../collection/collection.entity';
+import { User } from '../user/user.entity';
 import { CreateNFTDto } from './dto/nft.create.dto';
 import { NFT } from './nft.entity';
 
@@ -39,10 +40,26 @@ export class NFTService {
 
   public async delete(id: string): Promise<void> {
     const nft = await this.findById(id);
-    if (!nft)
-      throw new BadRequestException("There's no Collection with given ID");
+    if (!nft) throw new BadRequestException("There's no NFT with given ID");
 
     await nft.remove();
+  }
+
+  public async like(id: string, loggedUser: User): Promise<void> {
+    const nft = await this.findById(id);
+    if (!nft) throw new BadRequestException("There's no NFT with given ID");
+
+    if (nft.likes.some((user) => user.id === loggedUser.id)) {
+      nft.likes = nft.likes.filter((user) => user.id !== loggedUser.id);
+
+      await nft.save();
+
+      return;
+    }
+
+    nft.likes.push(loggedUser);
+
+    await nft.save();
   }
 
   private async findById(id: string): Promise<NFT | null> {

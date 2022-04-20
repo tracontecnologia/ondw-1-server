@@ -1,6 +1,7 @@
 import { CustomBaseEntity } from 'src/shared/custom-base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { Collection } from '../collection/collection.entity';
+import { User } from '../user/user.entity';
 
 @Entity('nfts')
 export class NFT extends CustomBaseEntity {
@@ -22,4 +23,15 @@ export class NFT extends CustomBaseEntity {
     onDelete: 'CASCADE',
   })
   parentCollection: Collection;
+
+  @ManyToMany(() => User, (user: User) => user.likedNfts, {
+    nullable: true,
+    eager: true,
+  })
+  @JoinTable({
+    name: 'nft_likes',
+    joinColumn: { name: 'nftId' },
+    inverseJoinColumn: { name: 'userId' },
+  })
+  likes: User[];
 }
