@@ -14,17 +14,14 @@ export class NFTService {
   constructor(
     @InjectRepository(NFT)
     private readonly repository: Repository<NFT>,
-  ) {
-    this.index = 1;
-  }
+  ) {}
 
   public async create(
     createDto: CreateNFTDto,
     photoPath: string,
     parentCollection: Collection,
   ): Promise<NFT> {
-    const hash = this.makeHash();
-    this.index++;
+    const hash = this.makeHash((await this.repository.find()).length + 1);
 
     const { name, price } = createDto;
 
@@ -97,8 +94,8 @@ export class NFTService {
     return nft;
   }
 
-  private makeHash(): string {
-    const string = '' + this.index;
+  private makeHash(index: number): string {
+    const string = '' + index;
     const pad = '0000';
 
     return pad.substring(0, pad.length - string.length) + string;
