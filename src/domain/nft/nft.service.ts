@@ -35,7 +35,7 @@ export class NFTService {
   }
 
   public async findAll(loggedUser: User): Promise<GetNFTDto[]> {
-    const nfts = await this.repository.find();
+    const nfts = await this.repository.find({ order: { createdAt: 'DESC' } });
     const serializedNfts: GetNFTDto[] = [];
 
     nfts.map((nft) => {
