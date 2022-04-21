@@ -28,10 +28,7 @@ export class UserService {
     id: string,
     loggedUser: User,
   ): Promise<GetUserProfileDto | null> {
-    const user = await this.repository.findOne({
-      where: { id },
-      relations: ['collections', 'likedNfts', 'collections.nfts'],
-    });
+    const user = await this.repository.findByIdWithRelations(id);
     if (!user) throw new BadRequestException("There's no User with given ID");
 
     const serializedCollections: GetCollectionDto[] = [];

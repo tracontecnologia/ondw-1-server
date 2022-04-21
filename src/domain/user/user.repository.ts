@@ -35,4 +35,11 @@ export class UserRepository extends Repository<User> {
 
     return user;
   }
+
+  public async findByIdWithRelations(id: string): Promise<User | null> {
+    return this.findOne({
+      where: { id },
+      relations: ['collections', 'likedNfts', 'collections.nfts'],
+    });
+  }
 }
