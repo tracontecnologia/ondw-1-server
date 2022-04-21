@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Collection } from '../collection/collection.entity';
 import { User } from '../user/user.entity';
 import { CreateNFTDto } from './dto/nft.create.dto';
+import { GetNFTDto } from './dto/nft.get.dto';
 import { NFT } from './nft.entity';
 
 @Injectable()
@@ -36,6 +37,34 @@ export class NFTService {
     });
 
     return nft.save();
+  }
+
+  public async findAll(loggedUser: User): Promise<GetNFTDto[]> {
+    const nfts = await this.repository.find();
+    const serializedNfts: GetNFTDto[] = [];
+
+    nfts.map((nft) => {
+      serializedNfts.push({
+        id: nft.id,
+        name: nft.name,
+        hash: nft.hash,
+        price: nft.price,
+        photoUrl: nft.photoUrl,
+        author: {
+          id: nft.parentCollection.author.id,
+          name: nft.parentCollection.author.name,
+          email: nft.parentCollection.author.email,
+        },
+        collection: {
+          id: nft.parentCollection.id,
+          name: nft.parentCollection.name,
+        },
+        likedByUser: nft.likes.some((user) => user.id === loggedUser.id),
+        likes: nft.likes.length,
+      });
+    });
+
+    return serializedNfts;
   }
 
   public async delete(id: string): Promise<void> {

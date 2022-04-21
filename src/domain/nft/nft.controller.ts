@@ -1,7 +1,15 @@
-import { Controller, Delete, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetLoggedUser } from 'src/auth/decorators/get-logged-user.decorator';
 import { User } from '../user/user.entity';
+import { GetNFTDto } from './dto/nft.get.dto';
 import { NFTService } from './nft.service';
 
 @Controller('nfts')
@@ -15,6 +23,11 @@ export class NFTController {
     @GetLoggedUser() user: User,
   ): Promise<void> {
     return this.service.like(id, user);
+  }
+
+  @Get('')
+  public async findAll(@GetLoggedUser() user: User): Promise<GetNFTDto[]> {
+    return this.service.findAll(user);
   }
 
   @Delete('/:id')
