@@ -30,6 +30,14 @@ export class NFTController {
     return this.service.findAll(user);
   }
 
+  @Get('/:id')
+  public async findById(
+    @Param('id') id: string,
+    @GetLoggedUser() user: User,
+  ): Promise<GetNFTDto | null> {
+    return this.service.findById(id, user);
+  }
+
   @Delete('/:id')
   public async delete(@Param('id') id: string): Promise<void> {
     return this.service.delete(id);

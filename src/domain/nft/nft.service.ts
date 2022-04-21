@@ -9,8 +9,6 @@ import { NFT } from './nft.entity';
 
 @Injectable()
 export class NFTService {
-  private index: number;
-
   constructor(
     @InjectRepository(NFT)
     private readonly repository: Repository<NFT>,
@@ -64,15 +62,42 @@ export class NFTService {
     return serializedNfts;
   }
 
+  public async findById(
+    id: string,
+    loggedUser: User,
+  ): Promise<GetNFTDto | null> {
+    const nft = await this.repository.findOne({ id });
+    if (!nft) throw new BadRequestException("There's no NFT with given ID");
+
+    return {
+      id: nft.id,
+      name: nft.name,
+      hash: nft.hash,
+      price: nft.price,
+      photoUrl: nft.photoUrl,
+      author: {
+        id: nft.parentCollection.author.id,
+        name: nft.parentCollection.author.name,
+        email: nft.parentCollection.author.email,
+      },
+      collection: {
+        id: nft.parentCollection.id,
+        name: nft.parentCollection.name,
+      },
+      likedByUser: nft.likes.some((user) => user.id === loggedUser.id),
+      likes: nft.likes.length,
+    };
+  }
+
   public async delete(id: string): Promise<void> {
-    const nft = await this.findById(id);
+    const nft = await this.repository.findOne({ id });
     if (!nft) throw new BadRequestException("There's no NFT with given ID");
 
     await nft.remove();
   }
 
   public async like(id: string, loggedUser: User): Promise<void> {
-    const nft = await this.findById(id);
+    const nft = await this.repository.findOne({ id });
     if (!nft) throw new BadRequestException("There's no NFT with given ID");
 
     if (nft.likes.some((user) => user.id === loggedUser.id)) {
@@ -86,12 +111,6 @@ export class NFTService {
     nft.likes.push(loggedUser);
 
     await nft.save();
-  }
-
-  private async findById(id: string): Promise<NFT | null> {
-    const nft = await this.repository.findOne({ id });
-
-    return nft;
   }
 
   private makeHash(index: number): string {
