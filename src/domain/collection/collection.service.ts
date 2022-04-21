@@ -2,11 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateNFTDto } from '../nft/dto/nft.create.dto';
+import { GetNFTDto } from '../nft/dto/nft.get.dto';
 import { NFT } from '../nft/nft.entity';
 import { NFTService } from '../nft/nft.service';
 import { User } from '../user/user.entity';
 import { Collection } from './collection.entity';
 import { CreateCollectionDto } from './dto/collection.create.dto';
+import { GetCollectionDto } from './dto/collection.get.dto';
 
 @Injectable()
 export class CollectionService {
@@ -52,17 +54,49 @@ export class CollectionService {
     return nft;
   }
 
+  public async findById(
+    id: string,
+    loggedUser: User,
+  ): Promise<GetCollectionDto | null> {
+    const collection = await this.repository.findOne({
+      where: { id },
+      relations: ['nfts'],
+    });
+    if (!collection)
+      throw new BadRequestException("There's no Collection with given ID");
+
+    const serializedNfts: GetNFTDto[] = [];
+    collection.nfts.map((nft) => {
+      serializedNfts.push({
+        id: nft.id,
+        name: nft.name,
+        hash: nft.hash,
+        price: nft.price,
+        photoUrl: nft.photoUrl,
+        likedByUser: nft.likes.some((user) => user.id === loggedUser.id),
+        likes: nft.likes.length,
+      });
+    });
+
+    return {
+      name: collection.name,
+      author: {
+        id: collection.author.id,
+        name: collection.author.name,
+        email: collection.author.email,
+      },
+      nfts: serializedNfts,
+      totalLikes: collection.nfts
+        .map((nft) => nft.likes.length)
+        .reduce((prev, curr) => prev + curr),
+    };
+  }
+
   public async delete(id: string): Promise<void> {
-    const collection = await this.findById(id);
+    const collection = await this.repository.findOne({ id });
     if (!collection)
       throw new BadRequestException("There's no Collection with given ID");
 
     await collection.remove();
-  }
-
-  private async findById(id: string): Promise<Collection | null> {
-    const collection = await this.repository.findOne({ id });
-
-    return collection;
   }
 }

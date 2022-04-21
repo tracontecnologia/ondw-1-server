@@ -7,8 +7,8 @@ export class GetNFTDto {
   hash: string;
   price: number;
   photoUrl: string;
-  author: GetUserDto;
-  collection: GetCollectionForNFTDto;
+  author?: GetUserDto;
+  collection?: GetCollectionForNFTDto;
   likedByUser: boolean;
   likes: number;
 }

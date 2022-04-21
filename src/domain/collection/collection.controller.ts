@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UploadedFile,
@@ -19,6 +20,7 @@ import { User } from '../user/user.entity';
 import { Collection } from './collection.entity';
 import { CollectionService } from './collection.service';
 import { CreateCollectionDto } from './dto/collection.create.dto';
+import { GetCollectionDto } from './dto/collection.get.dto';
 
 @Controller('collections')
 @UseGuards(AuthGuard())
@@ -41,6 +43,14 @@ export class CollectionController {
     @Body() createNFTDto: CreateNFTDto,
   ): Promise<NFT | null> {
     return this.service.createNFT(id, createNFTDto, photo.path);
+  }
+
+  @Get('/:id')
+  public async findById(
+    @Param('id') id: string,
+    @GetLoggedUser() loggedUser: User,
+  ): Promise<GetCollectionDto | null> {
+    return this.service.findById(id, loggedUser);
   }
 
   @Delete('/:id')
