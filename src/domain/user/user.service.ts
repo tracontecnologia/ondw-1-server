@@ -79,7 +79,7 @@ export class UserService {
       authoredCollections: serializedCollections,
       totalLikesInAuthoredCollections: serializedCollections
         .map((collection) => collection.totalLikes)
-        .reduce((prev, curr) => prev + curr),
+        .reduce((prev, curr) => prev + curr, 0),
       likedNfts: serializedNfts,
     };
   }
