@@ -88,7 +88,7 @@ export class CollectionService {
       nfts: serializedNfts,
       totalLikes: collection.nfts
         .map((nft) => nft.likes.length)
-        .reduce((prev, curr) => prev + curr),
+        .reduce((prev, curr) => prev + curr, 0),
     };
   }
 
