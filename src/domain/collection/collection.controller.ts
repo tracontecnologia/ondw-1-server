@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   UploadedFile,
   UseGuards,
@@ -38,7 +39,7 @@ export class CollectionController {
   @Post('/:id/nfts')
   @UseInterceptors(FileInterceptor('photo', assetsConfig('photos')))
   public async createNFT(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @UploadedFile() photo: Express.Multer.File,
     @Body() createNFTDto: CreateNFTDto,
   ): Promise<NFT | null> {
@@ -47,14 +48,16 @@ export class CollectionController {
 
   @Get('/:id')
   public async findById(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @GetLoggedUser() loggedUser: User,
   ): Promise<GetCollectionDto | null> {
     return this.service.findById(id, loggedUser);
   }
 
   @Delete('/:id')
-  public async delete(@Param('id') id: string): Promise<void> {
+  public async delete(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
     return this.service.delete(id);
   }
 }
