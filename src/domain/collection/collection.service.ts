@@ -1,20 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateNFTDto } from '../nft/dto/nft.create.dto';
 import { GetNFTDto } from '../nft/dto/nft.get.dto';
 import { NFT } from '../nft/nft.entity';
 import { NFTService } from '../nft/nft.service';
 import { User } from '../user/user.entity';
 import { Collection } from './collection.entity';
+import { CollectionRepository } from './collection.repository';
 import { CreateCollectionDto } from './dto/collection.create.dto';
 import { GetCollectionDto } from './dto/collection.get.dto';
 
 @Injectable()
 export class CollectionService {
   constructor(
-    @InjectRepository(Collection)
-    private readonly repository: Repository<Collection>,
+    private readonly repository: CollectionRepository,
     private readonly nftService: NFTService,
   ) {}
 
@@ -58,10 +56,7 @@ export class CollectionService {
     id: string,
     loggedUser: User,
   ): Promise<GetCollectionDto | null> {
-    const collection = await this.repository.findOne({
-      where: { id },
-      relations: ['nfts'],
-    });
+    const collection = await this.repository.findByIdWithNfts(id);
     if (!collection)
       throw new BadRequestException("There's no Collection with given ID");
 

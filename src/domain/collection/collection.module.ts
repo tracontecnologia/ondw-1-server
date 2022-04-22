@@ -4,10 +4,15 @@ import { AuthModule } from 'src/auth/auth.module';
 import { NFTModule } from '../nft/nft.module';
 import { CollectionController } from './collection.controller';
 import { Collection } from './collection.entity';
+import { CollectionRepository } from './collection.repository';
 import { CollectionService } from './collection.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Collection]), AuthModule, NFTModule],
+  imports: [
+    TypeOrmModule.forFeature([CollectionRepository]),
+    AuthModule,
+    NFTModule,
+  ],
   controllers: [CollectionController],
   providers: [CollectionService],
 })
