@@ -3,6 +3,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -19,7 +20,7 @@ export class NFTController {
 
   @Post('/:id/likes')
   public async like(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @GetLoggedUser() user: User,
   ): Promise<void> {
     return this.service.like(id, user);
@@ -32,14 +33,16 @@ export class NFTController {
 
   @Get('/:id')
   public async findById(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @GetLoggedUser() user: User,
   ): Promise<GetNFTDto | null> {
     return this.service.findById(id, user);
   }
 
   @Delete('/:id')
-  public async delete(@Param('id') id: string): Promise<void> {
+  public async delete(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
     return this.service.delete(id);
   }
 }

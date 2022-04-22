@@ -1,4 +1,10 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetLoggedUser } from 'src/auth/decorators/get-logged-user.decorator';
 import { GetUserProfileDto } from './dto/user.get-profile.dto';
@@ -12,7 +18,7 @@ export class UserController {
 
   @Get('/:id')
   public async getProfileById(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @GetLoggedUser() loggedUser: User,
   ): Promise<GetUserProfileDto | null> {
     return this.service.getProfileById(id, loggedUser);
