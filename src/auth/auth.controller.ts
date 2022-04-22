@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUserDto } from 'src/domain/user/dto/user.get.dto';
 import { User } from '../domain/user/user.entity';
 import { AuthService } from './auth.service';
 import { GetLoggedUser } from './decorators/get-logged-user.decorator';
@@ -24,7 +25,11 @@ export class AuthController {
 
   @Get('')
   @UseGuards(AuthGuard())
-  public getSignedUserInfo(@GetLoggedUser() user: User): User {
-    return user;
+  public getSignedUserInfo(@GetLoggedUser() user: User): GetUserDto {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   }
 }
