@@ -34,6 +34,7 @@ export class UserService {
     const serializedCollections: GetCollectionDto[] = [];
     user.collections.map((collection) => {
       serializedCollections.push({
+        id: collection.id,
         name: collection.name,
         nfts: collection.nfts.map((nft) => ({
           id: nft.id,
