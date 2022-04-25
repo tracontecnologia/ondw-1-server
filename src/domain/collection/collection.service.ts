@@ -74,6 +74,7 @@ export class CollectionService {
     });
 
     return {
+      id: collection.id,
       name: collection.name,
       author: {
         id: collection.author.id,
